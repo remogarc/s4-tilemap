@@ -8,7 +8,6 @@ const gridCtx = gridCanvas.getContext("2d") as CanvasRenderingContext2D;
 const selectCanvas = document.getElementById("selectCanvas") as HTMLCanvasElement;
 const selectCtx = selectCanvas.getContext("2d") as CanvasRenderingContext2D;
 
-
 //defining the textures to use
 const imageUrls = [
     "/tile1.png",
@@ -21,17 +20,13 @@ const imageUrls = [
     "/tile8.png"
 ];
 
-
 //defining the size of the main grid
 const numTiles = 32;
 const tileSize = gridCanvas.width / numTiles;
 
-
 //defining the size of the select grid
 const numSelectables = imageUrls.length;
 const selectHeight = selectCanvas.height / numSelectables;
-
-
 
 //creating the tilemap nested array
 let tilemap: HTMLImageElement[][] = new Array(numTiles);
@@ -52,18 +47,19 @@ let currentTile = "/tile1.png";
 redrawTilemap();
 drawSelectCanvas();
 
-
 //Function that draws a texture to a specific canvas ctx
 function drawTexture(row: number, col: number, ctx: CanvasRenderingContext2D, image: HTMLImageElement, width: number, height: number, cellSize: number) {
+    // Tile select
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, 64, 64);
+    
     image.onload = () => {
         ctx.drawImage(image, row * cellSize, col * cellSize, width, height)
     };
     ctx.drawImage(image, row * cellSize, col * cellSize, width, height)
 }
 
-
-// ----- Interacting with the main tilemap -----
-
+// Draw main tile map
 function redrawTilemap()
 {
   gridCtx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
@@ -73,18 +69,6 @@ function redrawTilemap()
         }
     }
 }
-
-
-gridCanvas.addEventListener("click", (e) => {
-    const coordX = Math.trunc(e.offsetX / tileSize);
-    const coordY = Math.trunc(e.offsetY / tileSize);
-
-    tilemap[coordX][coordY].src = currentTile;
-    redrawTilemap();
-})
-
-
-// ----- Interacting with the selectable tilemap -----
 
 // Loop through the selectable tiles and draw textures in each cell
 function drawSelectCanvas()
@@ -96,7 +80,17 @@ function drawSelectCanvas()
     }
 }
 
-selectCanvas.addEventListener("click", (e) => {
+// Interact with canvas
+gridCanvas.addEventListener("mousedown", (e) => {
+    const coordX = Math.trunc(e.offsetX / tileSize);
+    const coordY = Math.trunc(e.offsetY / tileSize);
+
+    tilemap[coordX][coordY].src = currentTile;
+    redrawTilemap();
+})
+
+// Select from tilemap
+selectCanvas.addEventListener("mousedown", (e) => {
     const coordY = Math.trunc(e.offsetY / selectHeight);
     currentTile = imageUrls[coordY];
 })
