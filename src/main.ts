@@ -28,6 +28,9 @@ const tileSize = gridCanvas.width / numTiles;
 const numSelectables = imageUrls.length;
 const selectHeight = selectCanvas.height / numSelectables;
 
+// class Flyweight {
+// }
+
 //creating the tilemap nested array
 let tilemap: HTMLImageElement[][] = new Array(numTiles);
 
@@ -49,10 +52,6 @@ drawSelectCanvas();
 
 //Function that draws a texture to a specific canvas ctx
 function drawTexture(row: number, col: number, ctx: CanvasRenderingContext2D, image: HTMLImageElement, width: number, height: number, cellSize: number) {
-    // Tile select
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, 64, 64);
-    
     image.onload = () => {
         ctx.drawImage(image, row * cellSize, col * cellSize, width, height)
     };
